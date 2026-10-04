@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Algorithm Studio</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="masthead">
+<div>
+<p class="eyebrow">EXPLORE · EXPERIMENT · UNDERSTAND</p>
+<h1>Algorithm Studio<span>.</span>
+</h1>
+<p>Turn a board into a lesson. Watch each decision unfold.</p>
+</div>
+<span class="badge">Interactive learning lab</span>
+</header>
+<main>
+<section class="toolbar" aria-label="Simulation controls">
+<div class="field">
+<label for="algorithm">Algorithm</label>
+<select id="algorithm">
+<option value="dijkstra">Dijkstra</option>
+<option value="astar">A* Search</option>
+<option value="bfs">Breadth-first search</option>
+<option value="dfs">Depth-first search</option>
+<option value="convolution">Matrix convolution</option>
+</select>
+</div>
+<div class="field">
+<label for="tool">Draw tool</label>
+<select id="tool">
+<option value="wall">Wall</option>
+<option value="weight">Mud · cost 5</option>
+<option value="erase">Eraser</option>
+<option value="start">Move start</option>
+<option value="end">Move goal</option>
+<option value="value" hidden>Paint input value</option>
+<option value="pan">Pan board</option>
+</select>
+</div>
+<div class="field speed">
+<label for="speed">Speed <output id="speed-value">70</output>
+</label>
+<input id="speed" type="range" min="1" max="100" value="70">
+</div>
+<div class="actions">
+<button id="play" class="primary">▶ Play</button>
+<button id="pause" disabled>Pause</button>
+<button id="step">Step</button>
+<button id="clear-path">Clear path</button>
+<button id="clear-board">Clear board</button>
+</div>
+</section>
+<section class="workspace">
+<div class="board-panel">
+<div class="board-heading">
+<h2 id="board-title">Your search space</h2>
+<div class="board-options">
+<label for="cell-size">Cell size</label>
+<select id="cell-size">
+<option value="16">Compact</option>
+<option value="24">Comfortable</option>
+<option value="32">Large</option>
+</select>
+<span id="state" class="badge">Ready</span>
+</div>
+</div>
+<div id="search-legend" class="legend" aria-label="Cell legend">
+<span>
+<i class="start">
+</i>Start</span>
+<span>
+<i class="end">
+</i>Goal</span>
+<span>
+<i class="wall">
+</i>Wall</span>
+<span>
+<i class="weight">
+</i>Mud</span>
+<span>
+<i class="visited">
+</i>Explored</span>
+<span>
+<i class="path">
+</i>Route</span>
+</div>
+<div id="matrix-legend" class="legend" hidden>
+<span>
+<i class="wall">
+</i>Wall input: 1</span>
+<span>Empty input: 0</span>
+<span>Numbers: custom input</span>
+<span>Orange outline: kernel window</span>
+</div>
+<div class="grid-scroll">
+<div id="grid" role="grid" aria-label="Editable algorithm board. Arrow keys move. Space paints with selected tool." aria-rowcount="21" aria-colcount="45">
+</div>
+</div>
+<p class="hint">Draw with a mouse or touch. Drag the start and goal to move them. Choose Pan board to scroll on touch screens. Keyboard: arrows to move, Space to paint.</p>
+<p id="status" role="status" aria-live="polite">Draw walls or mud, then press Play.</p>
+<div class="stats" aria-label="Run statistics">
+<div>
+<span id="visited-count">0</span>
+<small>Explored cells</small>
+</div>
+<div>
+<span id="path-length">—</span>
+<small>Route steps</small>
+</div>
+<div>
+<span id="path-cost">—</span>
+<small>Terrain cost</small>
+</div>
+<div>
+<span id="compute-time">—</span>
+<small>Compute time</small>
+</div>
+</div>
+</div>
+<aside class="lesson">
+<p class="eyebrow">BEHIND THE SEARCH</p>
+<h2 id="lesson-title">
+</h2>
+<p id="explanation">
+</p>
+<div class="facts">
+<span id="guarantee">
+</span>
+<span id="complexity">
+</span>
+</div>
+<h3>Follow the decisions</h3>
+<ol id="pseudocode">
+</ol>
+<p id="step-detail" class="detail">The current decision will appear here.</p>
+<div id="convolution-settings" hidden>
+<h3>Input value</h3>
+<label for="input-value">Value to paint</label>
+<input id="input-value" type="number" min="-1000000" max="1000000" step="any" value="1">
+<button id="paint-value">Use value brush</button>
+<h3>3 × 3 kernel</h3>
+<select id="kernel-preset" aria-label="Kernel preset">
+<option value="count">Wall count</option>
+<option value="blur">Box blur</option>
+<option value="edge">Edge detection</option>
+</select>
+<div id="kernel-inputs">
+</div>
+<p class="hint">Default input: walls = 1, other cells = 0. Paint your own numeric values. Zero padding keeps the output the same size.</p>
+</div>
+</aside>
+</section>
+<section id="output-panel" class="board-panel" hidden>
+<div class="board-heading">
+<h2>Output matrix</h2>
+<span class="badge">Orange: positive · Blue: negative</span>
+</div>
+<div class="grid-scroll">
+<div id="output-grid" role="grid" aria-label="Convolution output matrix" aria-rowcount="21" aria-colcount="45">
+</div>
+</div>
+<p class="hint">Hover or focus a processed cell to inspect its full value. Arrow keys move between output cells. Colors use the same scale across this run.</p>
+</section>
+<section class="scenarios" aria-label="Board scenarios">
+<div class="field">
+<label for="scenario">Scenario</label>
+<select id="scenario">
+<option value="obstacles">Random obstacles</option>
+<option value="maze">Recursive maze</option>
+<option value="weighted">Weighted detour</option>
+</select>
+</div>
+<div class="field">
+<label for="seed">Seed</label>
+<input id="seed" value="algorithm-1" maxlength="80">
+</div>
+<label class="check">
+<input id="solvable" type="checkbox" checked>Guarantee a route</label>
+<button id="generate">Generate board</button>
+<button id="save">Save board</button>
+<button id="load">Load board</button>
+<button id="export">Export</button>
+<button id="import">Import</button>
+<input id="import-file" type="file" accept="application/json,.json" hidden>
+</section>
+</main>
+<footer>Four search strategies. One board. A different way to think.</footer>
+<script type="module" src="src/app.js">
+</script>
+</body>
+</html>
